@@ -6,6 +6,11 @@ on:
         description: 'Enter Sprint branch'
         type: string
         required: true
+      SonarScan:
+        description: 'Enter value true or false'
+        type: string
+        default: "true"
+        required: true
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -21,15 +26,7 @@ jobs:
     - name: Build with Maven
       run: mvn -B -X package --file pom.xml
     - name: SonarQube Scan
-      uses: sonarsource/sonarqube-scan-action@master
-      with:
-        projectBaseDir: .
-        args: >
-          -Dsonar.projectKey=simple-java-maven-app
+      uses: sonarsource/sonarqube-scan-action@master # Ex: v2.1.0, See the latest version at https://github.com/marketplace/actions/official-sonarqube-scan
       env:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
-      # Check the Quality Gate status.
-    - name: SonarQube Quality Gate check
-      id: sonarqube-quality-gate-check
-      uses: sonarsource/sonarqube-quality-gate-action@master
+        SONAR_HOST_URL: ${{ vars.SONAR_HOST_URL }}
