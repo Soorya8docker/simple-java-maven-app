@@ -26,7 +26,13 @@ jobs:
     - name: Build with Maven
       run: mvn -B -X package --file pom.xml
     - name: SonarQube Scan
-      uses: sonarsource/sonarqube-scan-action@master # Ex: v2.1.0, See the latest version at https://github.com/marketplace/actions/official-sonarqube-scan
+      shell: bash
+      if: ${{ inputs.SonarScan == 'true' }}
+      run: sonar-scanner \
+           -Dsonar.projectKey=simple-java-maven-app \
+           -Dsonar.sources=. \
+           -Dsonar.host.url=http://192.168.56.125:9000 \
+           -Dsonar.login=fc5542943bd6323967723058e807bdf40fb36076
       env:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         SONAR_HOST_URL: ${{ vars.SONAR_HOST_URL }}
