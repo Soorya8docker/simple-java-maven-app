@@ -19,18 +19,18 @@ jobs:
 
     - name: Install dependencies (if applicable)
       run: |
-        npm install # or mvn install, gradle build, etc.
+        mvn install
 
     - name: Run tests (if applicable)
       run: |
-        npm test # or mvn test, etc.
+        mvn test
 
     - name: Run SonarQube Scanner
       env:
         SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       run: |
-        npx sonar-scanner \
+        mvn sonar-scanner \
           -Dsonar.projectKey=simple-java-maven-app \
           -Dsonar.sources=src \
           -Dsonar.host.url=$SONAR_HOST_URL \
