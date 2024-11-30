@@ -26,7 +26,6 @@ jobs:
     - name: Build with Maven
       run: mvn -B -X package --file pom.xml
     - name: SonarQube Scan
-      shell: bash
       if: ${{ inputs.SonarScan == 'true' }}
       run: mvn sonar:sonar \
            -Dsonar.projectKey=simple-java-maven-app \
