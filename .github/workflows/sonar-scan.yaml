@@ -18,15 +18,13 @@ jobs:
         distribution: 'adopt'
         java-version: '11'
     - name: Build with Maven
-      run: mvn install -f pom.xml
+      run: mvn -B -X package --file pom.xml
     - name: SonarQube Scan
       uses: sonarsource/sonarqube-scan-action@master
       with:
         projectBaseDir: .
         args: >
-          -Dsonar.projectKey=simple-java-maven-app \
-          -Dsonar.host.url=http://192.168.56.125:9000 \
-          -Dsonar.login=39522750b479484ee4914a67fcec5866d9291c26
+          -Dsonar.projectKey=simple-java-maven-app
       env:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
