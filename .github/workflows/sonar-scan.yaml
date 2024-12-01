@@ -29,7 +29,7 @@ jobs:
       if: ${{ inputs.SonarScan == 'true' }}
       run: mvn sonar:sonar \
            -Dsonar.projectKey=simple-java-maven-app \
-           -Dsonar.host.url=http://192.168.56.125:9000 \
+           -Dsonar.host.url=http://192.168.56.126:9000 \
            -Dsonar.login=fc5542943bd6323967723058e807bdf40fb36076
       env:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
