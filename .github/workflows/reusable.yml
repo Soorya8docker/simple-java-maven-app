@@ -60,3 +60,11 @@ jobs:
       with:
         name: ${{ inputs.repo }}-jar-files
         path: staging/
+  second_job:
+    needs: DEV
+    runs-on: ubuntu-latest
+    steps:
+    - name: Check previous job status
+      run: echo "First job status:${{ needs.DEV.result }}"
+      env:
+        JOB_STATUS: ${{ needs.DEV.result }}
