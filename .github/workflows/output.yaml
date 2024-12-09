@@ -12,6 +12,8 @@ on:
 jobs:
   DEV:
     runs-on: ubuntu-latest
+    outputs:
+      proceed_to_job2: ${{ steps.set-output.outputs.proceed }}
     steps:
     - uses: actions/checkout@v4
       with:
@@ -24,6 +26,13 @@ jobs:
         cache: maven
     - name: Build with Maven
       run: mvn -B -X package --file pom.xml
+    - name: Decide whether to proceed to Job2
+      id: set-output
+      run: |
+          echo "##[set-output name=proceed;]true" # Change to 'false' to simulate skipping
+    - name: Job 1 Execution
+      run: echo "Job 1 completed."
+
 
   publish-job:
     runs-on: ubuntu-latest
