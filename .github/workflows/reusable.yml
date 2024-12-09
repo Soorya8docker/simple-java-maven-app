@@ -33,6 +33,8 @@ on:
 jobs:
   DEV:
     runs-on: ubuntu-latest
+    outputs:
+      job_status: ${{ steps.set_status.outputs.status }}
     steps:
     - name: Inputs branch (workflow call)
       if: ${{ inputs.branch }} != ''
@@ -60,11 +62,14 @@ jobs:
       with:
         name: ${{ inputs.repo }}-jar-files
         path: staging/
+    - name: Run a command
+      run: echo "Hello from the first job"
+    - name: Set job status as output
+      id: set_status
+      run: echo "::set-output name=status::${{ job.status }}"
   second_job:
     needs: DEV
     runs-on: ubuntu-latest
     steps:
-    - name: Check previous job status
-      run: echo "First job status:${{ needs.DEV.result }}"
-      env:
-        JOB_STATUS: ${{ needs.DEV.result }}
+      - name: Get output from first job
+        run: echo "First job status is ${{ needs.DEV.outputs.job_status }}"
