@@ -36,7 +36,11 @@ jobs:
 
   publish-job:
     runs-on: ubuntu-latest
+    needs: DEV
+    if: ${{ needs.job1.outputs.proceed_to_job2 == 'true' }}
     steps:
+    - name: Job 2 Execution
+      run: echo "Job 2 is running because Job 1 allowed it."
     - uses: actions/checkout@v4
       with:
        ref: ${{ inputs.Branch }}
