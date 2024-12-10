@@ -68,6 +68,7 @@ jobs:
       id: set_status
       run: echo "::set-output name=status::${{ job.status }}"
   second_job:
+    needs: DEV
     runs-on: ubuntu-latest
     steps:
       - name: Get output from first job
