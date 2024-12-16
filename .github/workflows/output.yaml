@@ -25,9 +25,11 @@ jobs:
         distribution: 'temurin'
         cache: maven
     - name: Build with Maven
+      shell: bash
       run: |
            mvn -B -X package --file pom.xml > stdout
-           if [ echo "$stdout" | grep -q "ERROR" ]; then
+           value=$(cat stdout | grep -E "ERROR|SUCCESS")
+           if [ "${value}" == "ERROR" ]; then
              echo "FALSE"
            else
              echo "TRUE"
