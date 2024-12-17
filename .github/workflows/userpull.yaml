@@ -15,7 +15,7 @@ jobs:
       uses: actions/github-script@v6
       with:
         script: |
-          const username = 'kasi84';
+          const username = 'Soorya8docker';
           const repos = await github.rest.repos.listForUser({ username });
           return repos.data.map(repo => repo.name).join(", ");
         result-encoding: string
@@ -30,7 +30,7 @@ jobs:
 
     - name: Clone the selected repository
       run: | 
-        git clone https::/github.com/kasi84/${{ steps.select-repo.outputs.repo_name }} selected-repo
+        git clone https::/github.com/Soorya8docker/${{ steps.select-repo.outputs.repo_name }} selected-repo
 
     - name: Build the repository
       run: |
