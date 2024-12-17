@@ -1,0 +1,42 @@
+name: Build and Copy Jar
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout current repository
+      uses: actions/checkout@v2
+
+    - name: List all repostories of user
+      id: list-repos
+      uses: actions/github-script@v6
+      with:
+        script: |
+          const repos = await github.repos.listForUser({ username: 'kasi84' });
+          return repos.data.map(repo => repo.name);
+
+    - name: Select a repository
+      id: select-repo
+      run: |
+        echo "Available Repositories"
+        echo "${{ steps.list-repos.outputs.result }}"
+        read -p "Enter the repository name to build: " repo_name
+        echo "::set-output name=repo_name::$repo_name"
+
+    - name: Clone the selected repository
+      run: | 
+        git clone https::/github.com/kasi84/${{ steps.select-repo.outputs.repo_name }} selected-repo
+
+    - name: Build the repository
+      run: |
+        cd selected-repo
+        ./mvnw clean package # for Maven
+
+    - name: Copy JAR to current repository
+      run: |
+        cp selected-repo/target/*.jar .
+          
+    
