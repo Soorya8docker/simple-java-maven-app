@@ -15,8 +15,10 @@ jobs:
       uses: actions/github-script@v6
       with:
         script: |
-          const repos = await github.repos.listForUser({ username: 'kasi84' });
-          return repos.data.map(repo => repo.name);
+          const username = 'kasi84';
+          const repos = await github.rest.repos.listForUser({ username });
+          return repos.data.map(repo => repo.name).join(", ");
+        result-encoding: string
 
     - name: Select a repository
       id: select-repo
