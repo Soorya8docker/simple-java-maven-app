@@ -1,0 +1,62 @@
+name: Passing outputs of job to another job
+
+on:
+  workflow_dispatch:
+       inputs:
+         Branch:
+           description: 'Enter Sprint branch'
+           type: string
+           required: true
+  workflow_call:
+
+jobs:
+  DEV:
+    runs-on: ubuntu-latest
+    outputs:
+      proceed_to_job2: ${{ steps.set-output.outputs.proceed }}
+    steps:
+    - uses: actions/checkout@v4
+      with:
+       ref: ${{ inputs.Branch }}
+    - name: Set up JDK 17
+      uses: actions/setup-java@v4
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+        cache: maven
+    - name: Build with Maven
+      shell: bash
+      run: |
+           mvn -B -X package --file pom.xml > stdout
+           value=$(cat stdout | grep -E "ERROR|SUCCESS")
+           if [ "${value}" == "ERROR" ]; then
+             echo "FALSE"
+             echo "FALSE" > jobout
+           else
+             echo "TRUE"
+           fi
+    - name: Decide whether to proceed to Job2
+      id: set-output
+      run: |
+          echo "##[set-output name=proceed;]true" # Change to 'false' to simulate skipping
+    - name: Job 1 Execution
+      run: echo "Job 1 completed."
+
+
+  job2:
+    runs-on: ubuntu-latest
+    if: ${{ $jobout == 'FALSE' }}
+    steps:
+    - name: Job 2 Execution
+      run: echo "Job 2 is running because Job 1 allowed it."
+    - uses: actions/checkout@v4
+      with:
+       ref: ${{ inputs.Branch }}
+    - name: Set up JDK 17
+      uses: actions/setup-java@v4
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+        cache: maven
+    - name: Build with Maven
+      run: mvn -B -X package --file pom.xml
