@@ -12,7 +12,7 @@ on:
 jobs:
   DEV:
 
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
 
     steps:
     - uses: actions/checkout@v4
@@ -28,7 +28,7 @@ jobs:
       run: mvn -B -X package --file pom.xml
 
   publish-job:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     needs: DEV
     steps:
     - uses: actions/checkout@v4
